@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stage, Layer, Rect, Ellipse, Line, Circle } from "react-konva";
 import undoImg from "../src/assets/images/undo.svg";
 import redoImg from "../src/assets/images/redo.svg";
@@ -21,7 +21,9 @@ type TShapes = {
 };
 
 const App = () => {
-  const [shapes, setShapes] = useState<TShapes[]>([]);
+  const [shapes, setShapes] = useState<TShapes[]>(() =>
+    JSON.parse(localStorage.getItem("shapes") || "[]"),
+  );
   const [currentShape, setCurrentShape] = useState<TShapes>({
     drawMode: "freeDraw",
     points: [0, 0],
@@ -221,6 +223,12 @@ const App = () => {
       setIsDrawing(false);
     }
   };
+
+  useEffect(() => {
+    // Save shapes to localStorage on change
+    localStorage.setItem("shapes", JSON.stringify(shapes));
+  }, [shapes]);
+
   return (
     <>
       <div className="mx-auto mb-[60px] flex w-[65vw] flex-col gap-6 py-5 xl:w-[936px]">
