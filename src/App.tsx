@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { Stage, Layer, Rect, Ellipse, Line, Circle } from "react-konva";
+import undoImg from "../src/assets/images/undo.svg";
+import redoImg from "../src/assets/images/redo.svg";
+import pencilImg from "../src/assets/images/pencil.svg";
+import slashImg from "../src/assets/images/slash.svg";
+import ellipseImg from "../src/assets/images/oval.svg";
+import rectangleImg from "../src/assets/images/rectangle.svg";
+import polygonImg from "../src/assets/images/octagon.svg";
+import lineWidthImg from "../src/assets/images/line-width.png";
 
 type TShapes = {
   drawMode: string;
@@ -17,7 +25,7 @@ const App = () => {
   const [currentShape, setCurrentShape] = useState<TShapes>({
     drawMode: "freeDraw",
     points: [0, 0],
-    fillColor: "#888",
+    fillColor: "#353535",
     strokeWidth: 5,
   });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
@@ -222,52 +230,75 @@ const App = () => {
           <span className="text-2xl font-bold">뉴로클 사전 과제</span>
         </div>
         {/* Nav */}
-        <div className="flex gap-10">
+        <div className="flex w-[456px] items-center rounded-md bg-gray-200">
           {/* undo, redo */}
-          <div className="flex gap-3">
-            <button onClick={() => handleChangeShapeMode("freeDraw")}>
-              Undo
-            </button>
-            <button onClick={() => handleChangeShapeMode("straightLine")}>
-              Redo
-            </button>
-          </div>
+          <button
+            className="flex h-12 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("freeDraw")}
+          >
+            <img src={undoImg} width={20} height={17} alt="Undo" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("straightLine")}
+          >
+            <img src={redoImg} width={20} height={17} alt="Redo" />
+          </button>
 
           {/* Shape Mode*/}
-          <div className="flex gap-3">
-            <button
-              className=" "
-              onClick={() => handleChangeShapeMode("freeDraw")}
-            >
-              자유그리기
-            </button>
-            <button onClick={() => handleChangeShapeMode("straightLine")}>
-              직선
-            </button>
-            <button onClick={() => handleChangeShapeMode("ellipse")}>
-              타원
-            </button>
-            <button onClick={() => handleChangeShapeMode("rectangle")}>
-              직사각형
-            </button>
-            <button onClick={() => handleChangeShapeMode("polygon")}>
-              다각형
-            </button>
-          </div>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("freeDraw")}
+          >
+            <img src={pencilImg} width={30} height={30} alt="Pencil" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("straightLine")}
+          >
+            <img src={slashImg} width={30} height={30} alt="Slash" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("ellipse")}
+          >
+            <img src={ellipseImg} width={30} height={30} alt="Ellipse" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("rectangle")}
+          >
+            <img src={rectangleImg} width={30} height={30} alt="Rectangle" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeMode("polygon")}
+          >
+            <img src={polygonImg} width={30} height={30} alt="Polygon" />
+          </button>
 
           {/* Shape Style */}
-          <div className="flex gap-3">
-            <button onClick={() => handleChangeShapeColor("#555")}>크기</button>
-            <button onClick={() => handleChangeShapeStrokeWidth(10)}>
-              색상
-            </button>
-          </div>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeStrokeWidth(3)}
+          >
+            <img src={lineWidthImg} width={30} height={30} alt="Line Width" />
+          </button>
+          <button
+            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            onClick={() => handleChangeShapeColor("#232323")}
+          >
+            <div
+              style={{ backgroundColor: currentShape.fillColor }}
+              className="h-7 w-7"
+            ></div>
+          </button>
         </div>
 
         <Stage
           width={800}
           height={700}
-          className="bg-[#1E1E1E]"
+          className="rounded-md border-[1px] border-stone-400"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -349,7 +380,6 @@ const App = () => {
                 stroke={currentShape.fillColor} // 현재 그리는 선의 색상
                 strokeWidth={currentShape.strokeWidth}
                 lineCap="round"
-                dash={[4, 4]} // 대시 스타일 (선택사항)
               />
             )}
             {currentShape && currentShape.drawMode === "ellipse" && (
