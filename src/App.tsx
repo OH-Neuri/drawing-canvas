@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { Stage, Layer, Rect, Ellipse, Line, Circle } from "react-konva";
-import undoImg from "../src/assets/images/undo.svg";
-import redoImg from "../src/assets/images/redo.svg";
-import pencilImg from "../src/assets/images/pencil.svg";
-import slashImg from "../src/assets/images/slash.svg";
-import ellipseImg from "../src/assets/images/oval.svg";
-import rectangleImg from "../src/assets/images/rectangle.svg";
-import polygonImg from "../src/assets/images/octagon.svg";
-import lineWidthImg from "../src/assets/images/line-width.png";
+import { useEffect, useState } from 'react';
+import { Stage, Layer, Rect, Ellipse, Line, Circle } from 'react-konva';
+import undoImg from '../src/assets/images/undo.svg';
+import redoImg from '../src/assets/images/redo.svg';
+import pencilImg from '../src/assets/images/pencil.svg';
+import slashImg from '../src/assets/images/slash.svg';
+import ellipseImg from '../src/assets/images/oval.svg';
+import rectangleImg from '../src/assets/images/rectangle.svg';
+import polygonImg from '../src/assets/images/octagon.svg';
+import lineWidthImg from '../src/assets/images/line-width.png';
 
 type TShapes = {
   drawMode: string;
@@ -22,18 +22,18 @@ type TShapes = {
 
 const App = () => {
   const [shapes, setShapes] = useState<TShapes[]>(() =>
-    JSON.parse(localStorage.getItem("shapes") || "[]"),
+    JSON.parse(localStorage.getItem('shapes') || '[]')
   );
   const [currentShape, setCurrentShape] = useState<TShapes>({
-    drawMode: "freeDraw",
+    drawMode: 'freeDraw',
     points: [0, 0],
-    fillColor: "#353535",
+    fillColor: '#353535',
     strokeWidth: 5,
   });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
   const handleChangeShapeMode = (mode: string) => {
-    if (mode === "polygon") {
+    if (mode === 'polygon') {
       setIsDrawing(true);
       setCurrentShape({
         drawMode: mode,
@@ -56,11 +56,12 @@ const App = () => {
     }
   };
 
-  const handleChangeShapeColor = (fillColor: string) => {
+  const handleChangeShapeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = e.target.value;
     if (currentShape) {
       setCurrentShape((prev) => ({
         ...prev,
-        fillColor,
+        fillColor: newColor,
       }));
     }
   };
@@ -84,35 +85,35 @@ const App = () => {
       const { x, y } = pointerPosition;
 
       switch (currentShape.drawMode) {
-        case "freeDraw":
+        case 'freeDraw':
           setCurrentShape((prev) => ({
             ...prev,
             points: [x, y],
           }));
           break;
 
-        case "straightLine":
+        case 'straightLine':
           setCurrentShape((prev) => ({
             ...prev,
             points: [x, y, x, y], // 시작점과 임시 끝점 설정
           }));
           break;
 
-        case "ellipse":
-        case "rectangle":
+        case 'ellipse':
+        case 'rectangle':
           setCurrentShape((prev) => ({
             ...prev,
             points: [x, y],
           }));
           break;
 
-        case "polygon":
+        case 'polygon':
           // 첫 번째 점 근처를 클릭하면 다각형 완성
           if (
             currentShape.points.length >= 4 &&
             Math.sqrt(
               Math.pow(currentShape.points[0] - x, 2) +
-                Math.pow(currentShape.points[1] - y, 2),
+                Math.pow(currentShape.points[1] - y, 2)
             ) < 10
           ) {
             setShapes([...shapes, currentShape]); // 다각형 저장
@@ -152,21 +153,21 @@ const App = () => {
       const { x, y } = pointerPosition;
 
       switch (currentShape.drawMode) {
-        case "freeDraw":
+        case 'freeDraw':
           setCurrentShape((prev) => ({
             ...prev,
             points: [...prev.points, x, y],
           }));
           break;
 
-        case "straightLine":
+        case 'straightLine':
           setCurrentShape((prev) => ({
             ...prev,
             points: [prev.points[0], prev.points[1], x, y], // 시작점과 현재 마우스 위치로 업데이트
           }));
           break;
 
-        case "ellipse":
+        case 'ellipse':
           const radiusX = Math.abs(x - currentShape.points[0]);
           const radiusY = Math.abs(y - currentShape.points[1]);
           setCurrentShape((prev) => ({
@@ -176,7 +177,7 @@ const App = () => {
           }));
           break;
 
-        case "rectangle":
+        case 'rectangle':
           const width = x - currentShape.points[0];
           const height = y - currentShape.points[1];
           setCurrentShape((prev) => ({
@@ -187,7 +188,7 @@ const App = () => {
           }));
           break;
 
-        case "polygon":
+        case 'polygon':
           if (isDrawing && currentShape.points.length >= 2) {
             const updatedPoints = [
               ...currentShape.points.slice(0, -2), // 기존 점 유지
@@ -206,7 +207,7 @@ const App = () => {
 
   const handleMouseUp = () => {
     if (
-      currentShape.drawMode !== "polygon" &&
+      currentShape.drawMode !== 'polygon' &&
       (currentShape.points.length > 0 ||
         currentShape.width ||
         currentShape.radiusX)
@@ -226,7 +227,7 @@ const App = () => {
 
   useEffect(() => {
     // Save shapes to localStorage on change
-    localStorage.setItem("shapes", JSON.stringify(shapes));
+    localStorage.setItem('shapes', JSON.stringify(shapes));
   }, [shapes]);
 
   return (
@@ -242,13 +243,13 @@ const App = () => {
           {/* undo, redo */}
           <button
             className="flex h-12 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("freeDraw")}
+            onClick={() => handleChangeShapeMode('freeDraw')}
           >
             <img src={undoImg} width={20} height={17} alt="Undo" />
           </button>
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("straightLine")}
+            onClick={() => handleChangeShapeMode('straightLine')}
           >
             <img src={redoImg} width={20} height={17} alt="Redo" />
           </button>
@@ -256,31 +257,31 @@ const App = () => {
           {/* Shape Mode*/}
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("freeDraw")}
+            onClick={() => handleChangeShapeMode('freeDraw')}
           >
             <img src={pencilImg} width={30} height={30} alt="Pencil" />
           </button>
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("straightLine")}
+            onClick={() => handleChangeShapeMode('straightLine')}
           >
             <img src={slashImg} width={30} height={30} alt="Slash" />
           </button>
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("ellipse")}
+            onClick={() => handleChangeShapeMode('ellipse')}
           >
             <img src={ellipseImg} width={30} height={30} alt="Ellipse" />
           </button>
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("rectangle")}
+            onClick={() => handleChangeShapeMode('rectangle')}
           >
             <img src={rectangleImg} width={30} height={30} alt="Rectangle" />
           </button>
           <button
             className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeMode("polygon")}
+            onClick={() => handleChangeShapeMode('polygon')}
           >
             <img src={polygonImg} width={30} height={30} alt="Polygon" />
           </button>
@@ -292,15 +293,14 @@ const App = () => {
           >
             <img src={lineWidthImg} width={30} height={30} alt="Line Width" />
           </button>
-          <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeColor("#232323")}
-          >
-            <div
-              style={{ backgroundColor: currentShape.fillColor }}
-              className="h-7 w-7"
-            ></div>
-          </button>
+          <div className="flex h-14 w-14 items-center justify-center">
+            <input
+              type="color"
+              className="h-10 w-10"
+              value={currentShape.fillColor}
+              onChange={handleChangeShapeColor}
+            />
+          </div>
         </div>
 
         <Stage
@@ -315,7 +315,7 @@ const App = () => {
             {/* 기존 Shapes 렌더링 */}
             {shapes.map((shape, index) => {
               switch (shape.drawMode) {
-                case "freeDraw":
+                case 'freeDraw':
                   return (
                     <Line
                       key={index}
@@ -324,7 +324,7 @@ const App = () => {
                       strokeWidth={shape.strokeWidth}
                     />
                   );
-                case "straightLine":
+                case 'straightLine':
                   return (
                     <Line
                       key={index}
@@ -334,7 +334,7 @@ const App = () => {
                       lineCap="round"
                     />
                   );
-                case "ellipse":
+                case 'ellipse':
                   return (
                     <Ellipse
                       key={index}
@@ -346,7 +346,7 @@ const App = () => {
                       strokeWidth={shape.strokeWidth}
                     />
                   );
-                case "rectangle":
+                case 'rectangle':
                   return (
                     <Rect
                       key={index}
@@ -358,7 +358,7 @@ const App = () => {
                       strokeWidth={shape.strokeWidth}
                     />
                   );
-                case "polygon":
+                case 'polygon':
                   return (
                     <Line
                       key={index}
@@ -374,7 +374,7 @@ const App = () => {
             })}
 
             {/* 현재 드로잉 중인 Shape */}
-            {currentShape && currentShape.drawMode === "freeDraw" && (
+            {currentShape && currentShape.drawMode === 'freeDraw' && (
               <Line
                 points={currentShape.points}
                 stroke={currentShape.fillColor}
@@ -382,7 +382,7 @@ const App = () => {
               />
             )}
 
-            {currentShape && currentShape.drawMode === "straightLine" && (
+            {currentShape && currentShape.drawMode === 'straightLine' && (
               <Line
                 points={currentShape.points}
                 stroke={currentShape.fillColor} // 현재 그리는 선의 색상
@@ -390,7 +390,7 @@ const App = () => {
                 lineCap="round"
               />
             )}
-            {currentShape && currentShape.drawMode === "ellipse" && (
+            {currentShape && currentShape.drawMode === 'ellipse' && (
               <Ellipse
                 x={currentShape.points[0]}
                 y={currentShape.points[1]}
@@ -403,7 +403,7 @@ const App = () => {
               />
             )}
 
-            {currentShape && currentShape.drawMode === "rectangle" && (
+            {currentShape && currentShape.drawMode === 'rectangle' && (
               <Rect
                 x={currentShape.points[0]}
                 y={currentShape.points[1]}
@@ -415,7 +415,7 @@ const App = () => {
               />
             )}
 
-            {currentShape && currentShape.drawMode === "polygon" && (
+            {currentShape && currentShape.drawMode === 'polygon' && (
               <>
                 {/* 기존 점들로 그려진 선 */}
                 <Line
@@ -431,7 +431,7 @@ const App = () => {
                   .reduce<number[][]>(
                     (acc, _, i, arr) =>
                       i % 2 === 0 ? [...acc, [arr[i], arr[i + 1]]] : acc,
-                    [],
+                    []
                   )
                   .map(([x, y], index) => (
                     <Circle
