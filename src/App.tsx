@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Stage, Layer, Rect, Ellipse, Line, Circle } from 'react-konva';
+import { useEffect, useRef, useState } from 'react';
+import { Stage, Layer, Rect, Ellipse, Line, Circle, Label } from 'react-konva';
 import undoImg from '../src/assets/images/undo.svg';
 import redoImg from '../src/assets/images/redo.svg';
 import pencilImg from '../src/assets/images/pencil.svg';
@@ -8,6 +8,7 @@ import ellipseImg from '../src/assets/images/oval.svg';
 import rectangleImg from '../src/assets/images/rectangle.svg';
 import polygonImg from '../src/assets/images/octagon.svg';
 import lineWidthImg from '../src/assets/images/line-width.png';
+import trashImg from '../src/assets/images/trash.svg';
 
 type TShapes = {
   drawMode: string;
@@ -31,6 +32,18 @@ const App = () => {
     strokeWidth: 5,
   });
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
+  const [isStrokeWidthOptionOpen, setIsStrokeWidthOptionOpen] =
+    useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const strokeWidthOption = [
+    { value: 5, img: lineWidthImg },
+    { value: 10, img: lineWidthImg },
+    { value: 20, img: lineWidthImg },
+    { value: 30, img: lineWidthImg },
+    { value: 40, img: lineWidthImg },
+    { value: 50, img: lineWidthImg },
+  ];
 
   const handleChangeShapeMode = (mode: string) => {
     if (mode === 'polygon') {
@@ -66,14 +79,15 @@ const App = () => {
     }
   };
 
-  const handleChangeShapeStrokeWidth = (strokeWidth: number) => {
-    if (currentShape) {
-      setCurrentShape((prev) => ({
-        ...prev,
-        strokeWidth,
-      }));
-    }
+  const handleStrokeOptionClick = (width: number) => {
+    setIsStrokeWidthOptionOpen(false);
+    setCurrentShape({ ...currentShape, strokeWidth: width });
   };
+
+  //const handleRemoveShapes = () => {
+  //  setShapes([]);
+  //  setCurrentShape({ ...currentShape, points: [0, 0] });
+  //};
 
   const handleMouseDown = (e: any) => {
     setIsDrawing(true);
@@ -225,30 +239,46 @@ const App = () => {
     }
   };
 
+  // 도형 추가될 때 마다 로컬스트로지에 저장
   useEffect(() => {
-    // Save shapes to localStorage on change
     localStorage.setItem('shapes', JSON.stringify(shapes));
   }, [shapes]);
 
+  // 드롭다운 영역 밖 클릭 시 드롭다운 제거
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsStrokeWidthOptionOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
     <>
-      <div className="mx-auto mb-[60px] flex w-[65vw] flex-col gap-6 py-5 xl:w-[936px]">
+      <div className="mx-auto h-full flex w-[1200px] flex-col gap-6 py-5 ">
         {/* 헤더 */}
         <div>
           <img />
           <span className="text-2xl font-bold">뉴로클 사전 과제</span>
         </div>
         {/* Nav */}
-        <div className="flex w-[456px] items-center rounded-md bg-gray-200">
+        <div className="flex w-[508px] items-center rounded-md bg-gray-200">
           {/* undo, redo */}
           <button
-            className="flex h-12 w-14 items-center justify-center bg-gray-200"
+            className="flex h-12 w-14 items-center justify-center"
             onClick={() => handleChangeShapeMode('freeDraw')}
           >
             <img src={undoImg} width={20} height={17} alt="Undo" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className="flex h-14 w-14 items-center justify-center "
             onClick={() => handleChangeShapeMode('straightLine')}
           >
             <img src={redoImg} width={20} height={17} alt="Redo" />
@@ -287,12 +317,35 @@ const App = () => {
           </button>
 
           {/* Shape Style */}
-          <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
-            onClick={() => handleChangeShapeStrokeWidth(3)}
-          >
-            <img src={lineWidthImg} width={30} height={30} alt="Line Width" />
-          </button>
+          <div ref={dropdownRef} className="relative">
+            <button
+              onClick={() => setIsStrokeWidthOptionOpen((prev) => !prev)}
+              className="h-14 w-14 bg-gray-200 rounded-md flex items-center justify-center "
+            >
+              <img src={lineWidthImg} alt="Line Width" height={30} width={30} />
+            </button>
+            {/* 옵션 드롭다운 */}
+            {isStrokeWidthOptionOpen && (
+              <div className="absolute bg-white z-10 ">
+                {strokeWidthOption.map((option) => (
+                  <div
+                    className={`${option.value === currentShape.strokeWidth && 'bg-sky-500/50'} cursor-pointer flex border-[1px] w-52 h-16 border-gray-200 justify-between px-3 items-center gap-2`}
+                    key={option.value}
+                    onClick={() => handleStrokeOptionClick(option.value)}
+                  >
+                    <div
+                      style={{
+                        height: `${option.value}px`,
+                        width: '120px',
+                        backgroundColor: 'black',
+                      }}
+                    ></div>
+                    <span>{`${option.value}px`}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="flex h-14 w-14 items-center justify-center">
             <input
               type="color"
@@ -304,7 +357,7 @@ const App = () => {
         </div>
 
         <Stage
-          width={800}
+          width={1200}
           height={700}
           className="rounded-md border-[1px] border-stone-400"
           onMouseDown={handleMouseDown}
