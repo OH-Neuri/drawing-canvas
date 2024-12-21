@@ -84,11 +84,6 @@ const App = () => {
     setCurrentShape({ ...currentShape, strokeWidth: width });
   };
 
-  //const handleRemoveShapes = () => {
-  //  setShapes([]);
-  //  setCurrentShape({ ...currentShape, points: [0, 0] });
-  //};
-
   const handleMouseDown = (e: any) => {
     setIsDrawing(true);
 
@@ -239,6 +234,10 @@ const App = () => {
     }
   };
 
+  const handleRemoveShapes = () => {
+    setShapes([]);
+    setCurrentShape({ ...currentShape, points: [0, 0] });
+  };
   // 도형 추가될 때 마다 로컬스트로지에 저장
   useEffect(() => {
     localStorage.setItem('shapes', JSON.stringify(shapes));
@@ -270,6 +269,13 @@ const App = () => {
         </div>
         {/* Nav */}
         <div className="flex w-[508px] items-center rounded-md bg-gray-200">
+          <button
+            className="flex h-12 w-14 items-center justify-center"
+            onClick={() => handleRemoveShapes()}
+          >
+            <img src={trashImg} width={30} height={30} alt="Trash" />
+          </button>
+
           {/* undo, redo */}
           <button
             className="flex h-12 w-14 items-center justify-center"
