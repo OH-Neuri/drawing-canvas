@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Stage, Layer, Rect, Ellipse, Line, Circle, Label } from 'react-konva';
-import undoImg from '../src/assets/images/undo.svg';
-import redoImg from '../src/assets/images/redo.svg';
-import pencilImg from '../src/assets/images/pencil.svg';
-import slashImg from '../src/assets/images/slash.svg';
-import ellipseImg from '../src/assets/images/oval.svg';
-import rectangleImg from '../src/assets/images/rectangle.svg';
-import polygonImg from '../src/assets/images/octagon.svg';
-import lineWidthImg from '../src/assets/images/line-width.png';
-import trashImg from '../src/assets/images/trash.svg';
+import { Stage, Layer, Rect, Ellipse, Line, Circle } from 'react-konva';
+import undoImg from '../src/assets/images/drawing/undo.svg';
+import redoImg from '../src/assets/images/drawing/redo.svg';
+import pencilImg from '../src/assets/images/drawing/pencil.svg';
+import slashImg from '../src/assets/images/drawing/slash.svg';
+import ellipseImg from '../src/assets/images/drawing/oval.svg';
+import rectangleImg from '../src/assets/images/drawing/rectangle.svg';
+import polygonImg from '../src/assets/images/drawing/polygon.svg';
+import lineWidthImg from '../src/assets/images/drawing/line-width.png';
+import trashImg from '../src/assets/images/drawing/trash.svg';
+import neurocleLogoImg from '../src/assets/images/neurocle/neurocle-logo.png';
 
 type TShapes = {
   drawMode: string;
@@ -35,6 +36,7 @@ const App = () => {
   const [isStrokeWidthOptionOpen, setIsStrokeWidthOptionOpen] =
     useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const historyStep = useRef<TShapes[]>([]);
 
   const strokeWidthOption = [
     { value: 5, img: lineWidthImg },
@@ -126,6 +128,8 @@ const App = () => {
             ) < 10
           ) {
             setShapes([...shapes, currentShape]); // 다각형 저장
+            historyStep.current = [];
+
             setCurrentShape((prev) => ({
               ...prev,
               points: [], // 초기화
@@ -222,6 +226,7 @@ const App = () => {
         currentShape.radiusX)
     ) {
       setShapes([...shapes, currentShape]);
+      historyStep.current = [];
       setCurrentShape((prev) => ({
         ...prev,
         points: [],
@@ -236,8 +241,32 @@ const App = () => {
 
   const handleRemoveShapes = () => {
     setShapes([]);
+    historyStep.current = [];
     setCurrentShape({ ...currentShape, points: [0, 0] });
   };
+
+  // undo
+  const handleClickUndo = () => {
+    if (shapes.length === 0) return;
+    if (historyStep.current.length > 39) return;
+
+    // shape 에서 pop
+    const lastShape = shapes[shapes.length - 1];
+    const undoShapes = shapes.slice(0, -1);
+    setShapes(undoShapes);
+    // historyStep 에서 push
+    historyStep.current.push(lastShape);
+  };
+
+  // redo
+  const handleClickRedo = () => {
+    if (historyStep.current.length === 0) return;
+
+    const lastShape = historyStep.current.pop();
+    if (!lastShape) return;
+    setShapes([...shapes, lastShape]);
+  };
+
   // 도형 추가될 때 마다 로컬스트로지에 저장
   useEffect(() => {
     localStorage.setItem('shapes', JSON.stringify(shapes));
@@ -263,60 +292,66 @@ const App = () => {
     <>
       <div className="mx-auto h-full flex w-[1200px] flex-col gap-6 py-5 ">
         {/* 헤더 */}
-        <div>
-          <img />
+        <div className="flex gap-4 items-center">
+          <img
+            className="object-contain"
+            src={neurocleLogoImg}
+            width={150}
+            height={50}
+            alt="Neurocle Logo"
+          />
           <span className="text-2xl font-bold">뉴로클 사전 과제</span>
         </div>
         {/* Nav */}
         <div className="flex w-[508px] items-center rounded-md bg-gray-200">
           <button
             className="flex h-12 w-14 items-center justify-center"
-            onClick={() => handleRemoveShapes()}
+            onClick={handleRemoveShapes}
           >
             <img src={trashImg} width={30} height={30} alt="Trash" />
           </button>
 
           {/* undo, redo */}
           <button
-            className="flex h-12 w-14 items-center justify-center"
-            onClick={() => handleChangeShapeMode('freeDraw')}
+            className={`${(shapes.length === 0 || historyStep.current.length > 39) && 'disabled opacity-20 cursor-not-allowed'} flex h-12 w-14 items-center justify-center`}
+            onClick={handleClickUndo}
           >
             <img src={undoImg} width={20} height={17} alt="Undo" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center "
-            onClick={() => handleChangeShapeMode('straightLine')}
+            className={`${historyStep.current.length <= 0 && 'disabled opacity-20 cursor-not-allowed'} flex h-14 w-14 items-center justify-center `}
+            onClick={handleClickRedo}
           >
             <img src={redoImg} width={20} height={17} alt="Redo" />
           </button>
 
           {/* Shape Mode*/}
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className={`${currentShape.drawMode === 'freeDraw' && 'bg-cyan-400/40'} flex h-14 w-14 items-center justify-center `}
             onClick={() => handleChangeShapeMode('freeDraw')}
           >
             <img src={pencilImg} width={30} height={30} alt="Pencil" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className={`${currentShape.drawMode === 'straightLine' && 'bg-cyan-400/40'} flex h-14 w-14 items-center justify-center `}
             onClick={() => handleChangeShapeMode('straightLine')}
           >
             <img src={slashImg} width={30} height={30} alt="Slash" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className={`${currentShape.drawMode === 'ellipse' && 'bg-cyan-400/40'} flex h-14 w-14 items-center justify-center `}
             onClick={() => handleChangeShapeMode('ellipse')}
           >
             <img src={ellipseImg} width={30} height={30} alt="Ellipse" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className={`${currentShape.drawMode === 'rectangle' && 'bg-cyan-400/40'} flex h-14 w-14 items-center justify-center `}
             onClick={() => handleChangeShapeMode('rectangle')}
           >
             <img src={rectangleImg} width={30} height={30} alt="Rectangle" />
           </button>
           <button
-            className="flex h-14 w-14 items-center justify-center bg-gray-200"
+            className={`${currentShape.drawMode === 'polygon' && 'bg-cyan-400/40'} flex h-14 w-14 items-center justify-center `}
             onClick={() => handleChangeShapeMode('polygon')}
           >
             <img src={polygonImg} width={30} height={30} alt="Polygon" />
@@ -352,10 +387,10 @@ const App = () => {
               </div>
             )}
           </div>
-          <div className="flex h-14 w-14 items-center justify-center">
+          <div className="flex h-14 w-14 items-center justify-center relative">
             <input
               type="color"
-              className="h-10 w-10"
+              className="h-7 w-[42px] border-[1px] border-gray-600 rounded-sm py-[0.6px] px-[0.3px]"
               value={currentShape.fillColor}
               onChange={handleChangeShapeColor}
             />
@@ -365,7 +400,7 @@ const App = () => {
         <Stage
           width={1200}
           height={700}
-          className="rounded-md border-[1px] border-stone-400"
+          className="rounded-md border-[1px] border-stone-400 bg-white"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
