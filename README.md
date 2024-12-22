@@ -1,21 +1,34 @@
-# [뉴로클] 사전 과제
-### 벡터(SVG) 기반의 드로잉 툴 구현
+# [뉴로클] 사전 과제 (Frontend)
+### 주제 : 벡터(SVG) 기반의 드로잉 툴 구현
 <br />
 
 #### 프로젝트 기간
 - 2024.12.19(목) 15:30 ~ 2024.12.22(일) 24:00 (4일)
-
+<br />
 
 #### 과제 진행 node 버전
 - Node.js v20.13.1
 - Npm 10.5.2
-
+<br />
 
 #### 실행 방법
 ``` jsx
 $ cd neurocle-frontend-drawing-tool
 $ npm run dev
 ```
+<br />
+
+#### 배포 링크
+🌐 [드로잉 툴 바로가기](https://neurocle-frontend-drawing-tool-eheq1kwo6-haneuls-projects.vercel.app/)
+
+<br />
+
+#### 과제 세부 내용
+- React, typescript와 드로잉 라이브러리 Konva(https://konvajs.org/)를 사용해 프로젝트를 구현해주세요.
+- 드로잉 라이브러리는 Konva가 아닌 본인이 더 편한 라이브러리를 사용해도 감점요인은 아닙니다.
+- 참고로 윈도우 그림판은 비트맵 방식의 툴입니다. 이와 다르게 벡터 방식으로 동작하는 드로잉 툴을 구현해주세요.
+- 코드는 직접 작성해주세요. 타인의 코드를 그대로 복사-붙여넣기 하는 경우 배점이 없습니다.
+- 아래 필수 사항/선택 사항을 구현 가능한 수준에서 사용자의 입장을 고려하여 자유롭게 구현해주세요.
 
 <br />
 <br />
@@ -74,7 +87,8 @@ $ npm run dev
 
 ## 4. 프로젝트 화면 및 기능 설명
 ### 4.1 드로잉 타입 선택 : 자유그리기, 직선, 타원, 직사각형, 다각형
-![드로잉](https://github.com/user-attachments/assets/59e2ab9a-f124-4201-9aa0-10afc797e6ba)
+![드로잉_새로고침까지포함](https://github.com/user-attachments/assets/1be02d81-a1fa-48b2-808d-b7a37d48833f)
+
 
 #### 요구사항 확인
 1. 드로잉 타입 선택: 자유 그리기, 직선, 타원, 직사각형, 다각형(유첨 ‘polygon’ 파일 참고)
@@ -83,7 +97,7 @@ $ npm run dev
    - 새로 고침 이후에도 캔버스 내용이 유지되어야 합니다. ✅
      
 - 관련 Git Issues
-   - ![#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
+   - [#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
  
       
           
@@ -98,7 +112,7 @@ $ npm run dev
 2. 선 두께 선택
    - 두께 값의 최소/최대 제한이 필요합니다. (최소 5px, 최대 50px) ✅
 - 관련 Git Issues
-   - ![#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
+   - [#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
  
 
 <br />
@@ -113,7 +127,7 @@ $ npm run dev
 3. 컬러 선택
    - 현재 선택된 컬러를 사용자가 인지할 수 있어야 합니다. ✅
 - 관련 Git Issues
-   - ![#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
+   - [#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
 
 
 <br />
@@ -128,10 +142,22 @@ $ npm run dev
   - 지난 작업으로 돌아갈 수 있어야 하고 마지막으로 작업한 시점으로 돌아올 수도 있어야 합니다. ✅
   - 최근 40개의 작업 기록만 저장되도록 해주세요. ✅
 - 추가 구현
-  - Redo, Undo 상황에 따라 각 버튼 활성화/비활성화 기능 추가  ✅
+  - Redo, Undo 상황에 따라 각 버튼 활성화/비활성화 기능 추가 ✅
+  - 로컬스토리지에서 데이터를 가져올 때 데이터가 손상된 경우를 처리할 수 있도록 에러 핸들링 코드를 추가 ✅
 - 관련 Git Issues
-  - ![#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
- 
+  - [#2드로잉 기능 구현 및 스타일링](https://github.com/OH-Neuri/neurocle-frontend-drawing-tool/issues/2)
+
+<br />
+<br/ >
+
+### 4.5 전체 지우기 (추가구현)
+![전체지우기](https://github.com/user-attachments/assets/94e277a9-77f5-4d47-ba95-69377146ddaa)
+
+
+#### 구현 사항
+- 휴지통 아이콘 클릭 시 현재 캔버스에 그려진 도형 전체 지우기 기능 추가
+- 새로고침 시 이전에 그려진 도형들로 초기화되지 않도록 로컬스토리지에 저장된 데이터 제거
+- 드로잉 모드, 선 굵기, 색상 상태 값 유지 
 
 <br />
 <br/ >
