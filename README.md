@@ -19,7 +19,7 @@ $ npm run dev
 <br />
 
 #### 배포 링크
-🌐 [드로잉 툴 바로가기](https://neurocle-frontend-drawing-tool-eheq1kwo6-haneuls-projects.vercel.app/)
+🌐 [드로잉 툴 바로가기](https://neurocle-frontend-drawing-tool.vercel.app/)
 
 <br />
 
