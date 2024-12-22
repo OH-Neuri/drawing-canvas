@@ -15,8 +15,8 @@ type TDrawingToolBar = {
   currentShape: TShapes;
   historyStep: React.MutableRefObject<TShapes[]>;
   handleRemoveShapes: () => void;
-  handleClickUndo: () => void;
-  handleClickRedo: () => void;
+  handleUndo: () => void;
+  handleRedo: () => void;
   handleChangeStrokeWidth: (strokeWidth: number) => void;
   handleChangeShapeMode: (mode: string) => void;
   handleChangeShapeColor: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -47,8 +47,8 @@ const DrawingToolBar = ({
   currentShape,
   historyStep,
   handleRemoveShapes,
-  handleClickUndo,
-  handleClickRedo,
+  handleUndo,
+  handleRedo,
   handleChangeShapeMode,
   handleChangeShapeColor,
   handleChangeStrokeWidth,
@@ -63,14 +63,14 @@ const DrawingToolBar = ({
       {/* Undo, 실행 취소 버튼 */}
       <Button
         className={`${(shapes.length === 0 || historyStep.current.length > 39) && 'disabled opacity-20 cursor-not-allowed'} `}
-        onClick={handleClickUndo}
+        onClick={handleUndo}
       >
         <img src={undoImg} width={20} height={17} alt="Undo" />
       </Button>
       {/* Redo, 다시 실행 버튼 */}
       <Button
         className={`${historyStep.current.length <= 0 && 'disabled opacity-20 cursor-not-allowed'}`}
-        onClick={handleClickRedo}
+        onClick={handleRedo}
       >
         <img src={redoImg} width={20} height={17} alt="Redo" />
       </Button>

@@ -288,7 +288,7 @@ const App = () => {
   };
 
   // (Undo) 마지막으로 그려진 도형 실행 취소
-  const handleClickUndo = () => {
+  const handleUndo = () => {
     if (shapes.length === 0 || historyStep.current.length > 39) return;
     // 현재 상태에서 마지막 도형을 제거하고 새로운 상태를 설정
     setShapes((prevShapes) => {
@@ -303,7 +303,7 @@ const App = () => {
   };
 
   // (Redo) 실행 취소된 도형 다시 그리기
-  const handleClickRedo = () => {
+  const handleRedo = () => {
     setShapes((prev) => {
       const lastShape = historyStep.current.pop();
       if (!lastShape) return prev;
@@ -312,33 +312,35 @@ const App = () => {
     });
   };
 
-  // `shapes` 상태가 변경될 때마다 로컬 스토리지에 저장
-  useEffect(() => {
-    localStorage.setItem('shapes', JSON.stringify(shapes));
-  }, [shapes]);
+  const handleUndoKeyDown = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'z') {
+      console.log(JSON.stringify(shapes));
+      e.preventDefault();
+      handleUndo();
+    }
+  };
+  const handleRedoKeyDown = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'y') {
+      e.preventDefault();
+      handleRedo();
+    }
+  };
 
   useEffect(() => {
-    const handleUndoKeyDown = (e: globalThis.KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'z') {
-        e.preventDefault();
-        handleClickUndo();
-      }
-    };
-    const handleRedoKeyDown = (e: globalThis.KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'y') {
-        e.preventDefault();
-        handleClickRedo();
-      }
-    };
-
     window.addEventListener('keydown', handleUndoKeyDown);
     window.addEventListener('keydown', handleRedoKeyDown);
 
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       window.removeEventListener('keydown', handleUndoKeyDown);
       window.removeEventListener('keydown', handleRedoKeyDown);
     };
-  }, []);
+  }, [shapes]);
+
+  // `shapes` 상태가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem('shapes', JSON.stringify(shapes));
+  }, [shapes]);
 
   return (
     <>
@@ -353,8 +355,8 @@ const App = () => {
           historyStep={historyStep}
           handleChangeStrokeWidth={handleChangeStrokeWidth}
           handleRemoveShapes={handleRemoveShapes}
-          handleClickUndo={handleClickUndo}
-          handleClickRedo={handleClickRedo}
+          handleUndo={handleUndo}
+          handleRedo={handleRedo}
           handleChangeShapeMode={handleChangeShapeMode}
           handleChangeShapeColor={handleChangeShapeColor}
         />
