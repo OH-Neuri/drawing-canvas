@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Header from './components/Header';
 import DrawingToolBar from './components/DrawingToolBar';
@@ -321,12 +321,12 @@ const App = () => {
     const handleUndoKeyDown = (e: globalThis.KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'z') {
         e.preventDefault();
-        console.log('실행취소' + JSON.stringify(currentShape));
         handleClickUndo();
       }
     };
     const handleRedoKeyDown = (e: globalThis.KeyboardEvent) => {
       if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
         handleClickRedo();
       }
     };
