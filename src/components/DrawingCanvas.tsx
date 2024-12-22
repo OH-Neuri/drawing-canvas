@@ -1,9 +1,23 @@
 import { Stage, Layer, Rect, Ellipse, Line, Circle } from 'react-konva';
+import { KonvaEventObject } from 'konva/lib/Node';
 import { TShapes } from '../App';
 
+/**
+ * DrawingCanvas 컴포넌트 - 도형을 그릴 수 있는 캔버스
+ * @component
+ * @param {TDrawingCanvas} props - 컴포넌트에 전달되는 속성.
+ * @param {function} props.handleMouseDown - 마우스 다운 이벤트 핸들러.
+ * @param {function} props.handleMouseMove - 마우스 이동 이벤트 핸들러.
+ * @param {function} props.handleMouseUp - 마우스 업 이벤트 핸들러.
+ * @param {TShapes[]} props.shapes - 기존에 그려진 도형들의 목록.
+ * @param {TShapes} props.currentShape - 현재 그리고 있는 도형의 상태.
+ * @description
+ * - `Stage`와 `Layer`를 사용하여 도형을 그릴 수 있는 캔버스를 제공합니다.
+ * - 지원하는 도형 모드: 자유 그리기(freeDraw), 직선(straightLine), 타원(ellipse), 직사각형(rectangle), 다각형(polygon).
+ */
 export type TDrawingCanvas = {
-  handleMouseDown: (e: any) => void;
-  handleMouseMove: (e: any) => void;
+  handleMouseDown: (e: KonvaEventObject<MouseEvent>) => void;
+  handleMouseMove: (e: KonvaEventObject<MouseEvent>) => void;
   handleMouseUp: () => void;
   shapes: TShapes[];
   currentShape: TShapes;
@@ -20,7 +34,7 @@ export const DrawingCanvas = ({
     <Stage
       width={1200}
       height={700}
-      className="rounded-md border-[1px]  bg-[#516285]"
+      className="rounded-md border-[1px] border-gray-200 bg-[#ecedf1]"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -29,7 +43,7 @@ export const DrawingCanvas = ({
         {/* 기존 Shapes 렌더링 */}
         {shapes.map((shape, index) => {
           switch (shape.drawMode) {
-            case 'freeDraw':
+            case 'freeDraw': // 자유 그리기
               return (
                 <Line
                   key={index}
@@ -38,7 +52,7 @@ export const DrawingCanvas = ({
                   strokeWidth={shape.strokeWidth}
                 />
               );
-            case 'straightLine':
+            case 'straightLine': // 직선
               return (
                 <Line
                   key={index}
@@ -48,7 +62,7 @@ export const DrawingCanvas = ({
                   lineCap="round"
                 />
               );
-            case 'ellipse':
+            case 'ellipse': // 타원
               return (
                 <Ellipse
                   key={index}
@@ -60,7 +74,7 @@ export const DrawingCanvas = ({
                   strokeWidth={shape.strokeWidth}
                 />
               );
-            case 'rectangle':
+            case 'rectangle': // 직사각형
               return (
                 <Rect
                   key={index}
@@ -72,7 +86,7 @@ export const DrawingCanvas = ({
                   strokeWidth={shape.strokeWidth}
                 />
               );
-            case 'polygon':
+            case 'polygon': // 다각형
               return (
                 <Line
                   key={index}
@@ -131,7 +145,7 @@ export const DrawingCanvas = ({
 
         {currentShape && currentShape.drawMode === 'polygon' && (
           <>
-            {/* 기존 점들로 그려진 선 */}
+            {/* 현재 드로잉 중인 다각형의 선 */}
             <Line
               points={currentShape.points}
               stroke="#3aa9ff"
@@ -140,7 +154,7 @@ export const DrawingCanvas = ({
               closed={false} // 다각형이 아직 미완성이므로 닫지 않음
             />
 
-            {/* 점 표시 */}
+            {/* 다각형의 각 점 */}
             {currentShape.points
               .reduce<number[][]>(
                 (acc, _, i, arr) =>
