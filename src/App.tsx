@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import Header from './components/Header';
 import DrawingToolBar from './components/DrawingToolBar';
@@ -290,25 +290,55 @@ const App = () => {
   // (Undo) 마지막으로 그려진 도형 실행 취소
   const handleClickUndo = () => {
     if (shapes.length === 0 || historyStep.current.length > 39) return;
+    // 현재 상태에서 마지막 도형을 제거하고 새로운 상태를 설정
+    setShapes((prevShapes) => {
+      const lastShape = prevShapes[prevShapes.length - 1];
+      if (!lastShape) return prevShapes;
 
-    // shape 에서 pop
-    const lastShape = shapes[shapes.length - 1];
-    const undoShapes = shapes.slice(0, -1);
-    setShapes(undoShapes);
-    // historyStep 에서 push
-    historyStep.current.push(lastShape);
+      const undoShapes = prevShapes.slice(0, -1);
+      historyStep.current.push(lastShape);
+
+      return undoShapes;
+    });
   };
 
   // (Redo) 실행 취소된 도형 다시 그리기
   const handleClickRedo = () => {
-    const lastShape = historyStep.current.pop();
-    if (lastShape) setShapes((prev) => [...prev, lastShape]);
+    setShapes((prev) => {
+      const lastShape = historyStep.current.pop();
+      if (!lastShape) return prev;
+
+      return [...prev, lastShape];
+    });
   };
 
   // `shapes` 상태가 변경될 때마다 로컬 스토리지에 저장
   useEffect(() => {
     localStorage.setItem('shapes', JSON.stringify(shapes));
   }, [shapes]);
+
+  useEffect(() => {
+    const handleUndoKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        console.log('실행취소' + JSON.stringify(currentShape));
+        handleClickUndo();
+      }
+    };
+    const handleRedoKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'y') {
+        handleClickRedo();
+      }
+    };
+
+    window.addEventListener('keydown', handleUndoKeyDown);
+    window.addEventListener('keydown', handleRedoKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleUndoKeyDown);
+      window.removeEventListener('keydown', handleRedoKeyDown);
+    };
+  }, []);
 
   return (
     <>
