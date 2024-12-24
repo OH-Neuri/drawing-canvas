@@ -168,26 +168,16 @@ const App = () => {
 
           setCurrentShape((prev) => ({
             ...prev,
-            points: [], // 초기화
+            points: [-50, -50], // 초기화
           }));
-          setIsDrawing(false);
           return;
         }
 
-        // 첫 클릭에서 첫 점 추가
-        if (currentShape.points.length === 0) {
-          setCurrentShape((prev) => ({
-            ...prev,
-            points: [x, y],
-          }));
-        } else {
-          // 이후 점 추가
-          setCurrentShape((prev) => ({
-            ...prev,
-            points: [...prev.points, x, y],
-          }));
-          break;
-        }
+        setCurrentShape((prev) => ({
+          ...prev,
+          points: [...prev.points, x, y],
+        }));
+        break;
     }
   };
 
@@ -314,11 +304,11 @@ const App = () => {
 
   const handleUndoKeyDown = (e: KeyboardEvent) => {
     if (e.ctrlKey && e.key === 'z') {
-      console.log(JSON.stringify(shapes));
       e.preventDefault();
       handleUndo();
     }
   };
+
   const handleRedoKeyDown = (e: KeyboardEvent) => {
     if (e.ctrlKey && e.key === 'y') {
       e.preventDefault();
