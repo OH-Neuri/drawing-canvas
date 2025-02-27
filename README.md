@@ -12,7 +12,8 @@
 
 #### 실행 방법
 ``` jsx
-$ cd neurocle-frontend-drawing-tool
+$ cd drawing-tool
+$ npm i
 $ npm run dev
 ```
 <br />
@@ -57,37 +58,38 @@ $ npm run dev
 ## 3. 프로젝트 화면
 |기본 화면|자유 그리기|
 |:--:|:--:|
-|![기본화면](https://github.com/user-attachments/assets/4428ff12-2cac-4a9d-a51e-ab86a20649b1)|![자유그리기](https://github.com/user-attachments/assets/3f1581f4-130d-4b41-a72f-79a1666d5337)|
+|![image](https://github.com/user-attachments/assets/f6891bb8-31c3-4240-b2cf-0f3dd27065b9)|![image](https://github.com/user-attachments/assets/dc9f5bad-f05d-402a-b1d1-9f38d4163e89)|
 
 
 |직선 그리기| 타원 그리기 |
 |:--:|:--:|
-|![직선 그리기](https://github.com/user-attachments/assets/0ce4d594-dabe-4b70-abfe-06822bc07f32)|![타원그리기](https://github.com/user-attachments/assets/a4fa2ac0-e97b-4a88-b352-0be05bd36e63)|
+|![image](https://github.com/user-attachments/assets/24b16cd1-8844-4099-99e8-7e1fd27410c5)|![image](https://github.com/user-attachments/assets/56de7699-cc16-48f7-9c33-655cfd3822ef)|
 
 
 |직사각형 그리기|다각형 그리기 |
 |:--:|:--:|
-|![페이지네이션2](https://github.com/user-attachments/assets/e38d934b-971e-4eef-b2e0-77a417cdb17a)|![image](https://github.com/user-attachments/assets/01d4f00b-5d40-4a44-8642-9896da53a8a8)|
+|![image](https://github.com/user-attachments/assets/a80c7207-de87-4518-9054-fd5cae0b005e)|![image](https://github.com/user-attachments/assets/99c2f1b0-2deb-43ae-98b4-e398261a50f7)|
 
 |Undo(실행 취소)| Redo(되돌리기)|
 |:--:|:--:|
-|![image](https://github.com/user-attachments/assets/7beacdb0-9f70-40d6-98ee-8d56f6fd373e)|![image](https://github.com/user-attachments/assets/a8415205-4013-470d-ae06-0d8e498eafff)|
+|![image](https://github.com/user-attachments/assets/dce6d6b7-bed5-435c-b43e-070ce8027786)|![image](https://github.com/user-attachments/assets/9ffe97c9-69f9-4d7e-9c1f-574329c1254e)|
 
 |선 굵기 선택 | 색상 선택 | 
 |:--:|:--:|
-|![image](https://github.com/user-attachments/assets/9e66e966-086a-41a1-8afe-f4c35b410f3e)|![image](https://github.com/user-attachments/assets/52104bd3-a355-43d1-950a-6cb16ae1f520)|
+|![image](https://github.com/user-attachments/assets/103a9bef-068a-4869-85ae-430959b4b109)|![image](https://github.com/user-attachments/assets/f76f05da-ce9e-4cf0-811c-6e080ba578c1)|
 
 <br />
 <br />
 
 ## 4. 프로젝트 화면 및 기능 설명
 ### 4.1 드로잉 타입 선택 : 자유그리기, 직선, 타원, 직사각형, 다각형
-![드로잉_새로고침까지포함](https://github.com/user-attachments/assets/1be02d81-a1fa-48b2-808d-b7a37d48833f)
+![DrawingCanvas-Chrome2025-02-2721-55-45-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/0b0483a1-8f73-47be-b09f-a328ffc0c261)
+
 
 
 #### 요구사항 확인
 1. 드로잉 타입 선택: 자유 그리기, 직선, 타원, 직사각형, 다각형
-   - 1회성 드로잉이 아닌, 그려진 도형들이 한 화면에서 나타남
+   - 1회성 드로잉이 아닌, 그려진 도형들이 한 화면에서 나타나도록 구현
    - 가장 최근에 그린 도형이 맨 위에 표시
    - 새로 고침 이후에도 캔버스 내용이 유지
      
@@ -101,7 +103,7 @@ $ npm run dev
   
 
 ### 4.2 선 두께 선택
-![선둒](https://github.com/user-attachments/assets/a09adf30-c56a-4e5a-b1c2-9d7ea4c3c8ce)
+![DrawingCanvas-Chrome2025-02-2721-57-07-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/7e1de91a-8878-4653-be6b-d429b5e3a5b1)
 
 #### 요구사항 확인
 2. 선 두께 선택
@@ -115,8 +117,7 @@ $ npm run dev
 
 
 ### 4.3 컬러 선택
-![선색상변경](https://github.com/user-attachments/assets/a95691a4-02b5-4fa5-a5c6-e03ad131a149)
-
+![DrawingCanvas-Chrome2025-02-2721-57-38-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/c6657670-1fd4-406f-9ea4-d8181a1822b6)
 
 #### 요구사항 확인
 3. 컬러 선택
@@ -130,7 +131,7 @@ $ npm run dev
 
 
 ### 4.4 Undo, Redo 
-![리두언두](https://github.com/user-attachments/assets/4209938a-6b15-45a1-a631-1fcf5491e876)
+![DrawingCanvas-Chrome2025-02-2721-58-09-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/981db1c8-d721-492f-a649-0db4723b478d)
 
 #### 요구사항 확인
 4. Undo, Redo
@@ -146,7 +147,7 @@ $ npm run dev
 <br/ >
 
 ### 4.5 전체 지우기
-![전체지우기](https://github.com/user-attachments/assets/94e277a9-77f5-4d47-ba95-69377146ddaa)
+![DrawingCanvas-Chrome2025-02-2721-58-43-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b91a625b-0c10-4bb9-9259-8ba43ba98a7a)
 
 
 #### 구현 사항
@@ -160,7 +161,7 @@ $ npm run dev
 ## 5. 프로젝트 폴더 구조
 ``` jsx
 📦public
- ┣ 📜neurocle-favicon.png
+ ┣ 📜paint-brush_5956090.png
  ┗ 📜vite.svg
 📦src
  ┣ 📂assets
@@ -180,8 +181,8 @@ $ npm run dev
  ┃ ┃ ┃ ┣ 📜slash.svg
  ┃ ┃ ┃ ┣ 📜trash.svg
  ┃ ┃ ┃ ┗ 📜undo.svg
- ┃ ┃ ┗ 📂neurocle
- ┃ ┃ ┃ ┗ 📜neurocle-logo.png
+ ┃ ┃ ┗ 📂logo
+ ┃ ┃ ┃ ┗ 📜paint-brush_5956090.png
  ┣ 📂components
  ┃ ┣ 📂common
  ┃ ┃ ┗ 📜Button.tsx
