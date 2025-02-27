@@ -334,7 +334,7 @@ const App = () => {
 
   return (
     <>
-      <div className="mx-auto h-screen flex w-[1200px] flex-col gap-6 py-7 ">
+      <div className="mx-auto h-screen flex w-[1200px] flex-col gap-6 py-5 ">
         {/* 헤더 */}
         <Header />
 
